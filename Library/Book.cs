@@ -17,6 +17,7 @@ namespace Library
     {
         public int Id { get; set;  }
         public string ISDN { get; set; }
+        public string Code { get; set; }
         public string Name { get; set; }        
         public BookType BookType { get; set; }
         public string Author { get; set; }

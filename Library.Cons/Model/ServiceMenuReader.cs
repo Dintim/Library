@@ -102,14 +102,59 @@ namespace Library.Cons.Model
                 Thread.Sleep(2000);
             }
         }
+
         public void ReturnBook()
         {
-            Console.Clear();
-            Console.WriteLine("Список Ваших книг");
-            Console.WriteLine("---------------------------------------------\n");
-            Console.WriteLine("ID:\tISDN:\tНазвание:\tАвтор:\tДата публикации:\tЖанр:\tСтатус:");
-            //ID: {0}\tISDN: {1}\tНазвание: {2}\tАвтор: {3}\tДата публикации: {4: yyyy}\tЖанр: {5}\tСтатус: {6}
+            string msg = "";
+            Book book = null;
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Список Ваших книг\n");
+                Console.WriteLine("ID:\tISDN:\tНазвание:\tАвтор:\tДата публикации:\tЖанр:\tСтатус:");
+                Console.WriteLine("---------------------------------------------\n");
+                foreach (Book i in AuthorReader.IssuedBooks)
+                {
+                    Console.WriteLine(i.ToString());
+                }
+                Console.Write("Введите ID книги, которую необходимо вернуть: ");
+                int id = Int32.Parse(Console.ReadLine());
+                book = serviceBook.FindBookById(id, out msg);
+                if (book != null)
+                {
+                    AuthorReader.IssuedBooks.Remove(book);
+                    serviceBook.UpdateBookStatus(book, BookStatus.free, out msg);
+                    Transaction trans = new Transaction();
+                    trans.Date = DateTime.Now;
+                    trans.Reader = AuthorReader;
+                    trans.Book = book;
+                    trans.TransactionType = TransactionType.returnBook;
+                    serviceTransaction.AddTransactionToDB(trans, out msg);
+
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Книга возвращена");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine("Вернуть еще одну книгу?");
+                    Console.WriteLine("1. да");
+                    Console.WriteLine("2. нет");
+                    Console.Write("Ваш ответ:");
+                    int ans = Int32.Parse(Console.ReadLine());
+                    if (ans == 1)
+                        continue;
+                    else
+                        break;
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(msg);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Thread.Sleep(2000);
+                }
+            }
         }
+
         public void ChangeReaderPassword()
         {
             int k = 1;
