@@ -7,19 +7,27 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    class ServiceBookType
+    public class ServiceBookType
     {
-        public bool AddBookTypeToDB(BookType bookType, out string message)
+        public bool AddBookTypeToDB(string bookType, out string message)
         {
             try
             {
                 using (LiteDatabase db = new LiteDatabase(@"library.db"))
                 {
                     var bt = db.GetCollection<BookType>("BookTypes");
-                    bt.Insert(bookType);
-                }
-                message = string.Format("Жанр {0} в базу добавлен успешно", bookType.Name);
-                return true;
+                    if (!bt.Exists(e => e.Name.Equals(bookType)))
+                    {
+                        bt.Insert(new BookType() { Name = bookType });
+                        message = string.Format("Жанр {0} в базу добавлен успешно", bookType);
+                        return true;
+                    }
+                    else
+                    {
+                        message = "Такой жанр уже существует в базе";
+                        return false;
+                    }
+                }                
             }
             catch (Exception ex)
             {

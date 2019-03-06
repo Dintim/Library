@@ -13,6 +13,7 @@ namespace Library.Cons.Model
         private ServiceAdministrator serviceAdministrator = new ServiceAdministrator();
         private Administrator AuthorAdmin = new Administrator();
         private ServiceBook serviceBook = new ServiceBook();
+        private ServiceBookType serviceBookType = new ServiceBookType();
         private ServiceTransaction serviceTransaction = new ServiceTransaction();
 
         public void MainMenu()

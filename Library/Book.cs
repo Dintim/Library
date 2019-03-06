@@ -21,10 +21,9 @@ namespace Library
         public string Name { get; set; }        
         public BookType BookType { get; set; }
         public string Author { get; set; }
-        public DateTime PublishDate { get; set; }
+        public int PublishDate { get; set; }
         public int Edition { get; set; }
-        public BookStatus BookStatus { get; set; }
-        public Guid ReaderId { get; set; }
+        public BookStatus BookStatus { get; set; }        
 
         public Book()
         {
@@ -33,7 +32,7 @@ namespace Library
 
         public override string ToString()
         {
-            return string.Format("ID: {0}\tISDN: {1}\tНазвание: {2}\tАвтор: {3}\tДата публикации: {4: yyyy}\tЖанр: {5}\tСтатус: {6}",
+            return string.Format("ID: {0}\tISDN: {1}\tНазвание: {2}\tАвтор: {3}\tДата публикации: {4}\tЖанр: {5}\tСтатус: {6}",
                 Id, ISDN, Name, Author, PublishDate, BookType, BookStatus);
         }
     }

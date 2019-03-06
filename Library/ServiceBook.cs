@@ -131,6 +131,46 @@ namespace Library
             }
         }
 
+        public bool UpdateBookCode(Book book, string code, out string message)
+        {
+            try
+            {
+                using (LiteDatabase db = new LiteDatabase(@"library.db"))
+                {
+                    var books = db.GetCollection<Book>("Books");
+                    book.Code = code;
+                    books.Update(book);
+                }
+                message = string.Format("Внутренний код книги {0} изменен на {1}", book.Id, code);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return false;
+            }
+        }
+
+        public bool UpdateBookBookType(Book book, BookType bookType, out string message)
+        {
+            try
+            {
+                using (LiteDatabase db = new LiteDatabase(@"library.db"))
+                {
+                    var books = db.GetCollection<Book>("Books");
+                    book.BookType = bookType;
+                    books.Update(book);
+                }
+                message = string.Format("Жанр книги {0} изменен на {1}", book.Id, bookType);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return false;
+            }
+        }
+
         public bool UpdateBookStatus(Book book, BookStatus status, out string message)
         {
             try

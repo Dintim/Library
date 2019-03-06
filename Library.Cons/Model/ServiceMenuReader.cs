@@ -159,6 +159,70 @@ namespace Library.Cons.Model
             }
         }
 
+        public void UpdateBook(Book book)
+        {
+            string msg = "";
+            if (book != null)
+            {
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Редактировать профиль книги");
+                    Console.WriteLine("---------------------------------------------\n");                    
+                    Console.WriteLine("1. Внутренний код");
+                    Console.WriteLine("2. Жанр");
+                    Console.WriteLine("3. Выход");
+                    Console.Write("Ваш выбор: ");
+                    int ch = Int32.Parse(Console.ReadLine());
+                    Console.Clear();
+                    if (ch == 1)
+                    {
+                        Console.Write("Новый внутренний код книги:");
+                        string code = Console.ReadLine();
+                        serviceBook.UpdateBookCode(book, code, out msg);
+                    }
+                    else if (ch == 2)
+                    {
+                        Console.WriteLine("Новый жанр книги:");
+                        var tmp = serviceBookType.GetBookTypes(out msg);
+                        foreach (BookType i in tmp)
+                        {
+                            Console.WriteLine("{0}. {1}", i.Id, i.Name);
+                        }
+                        while (true)
+                        {
+                            Console.Write("Ваш выбор жанра:");
+                            int btype = Int32.Parse(Console.ReadLine());
+                            if (tmp.Exists(e => e.Id.Equals(btype)))
+                            {
+                                BookType bt = tmp.Find(f => f.Id.Equals(btype));
+                                serviceBook.UpdateBookBookType(book, bt, out msg);
+                                break;
+                            }
+                            else
+                                continue;
+                        }
+                    }                    
+                    else if (ch == 3)
+                        break;
+                    else
+                        continue;
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(msg);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Thread.Sleep(2000);
+                }
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Читатель с такими параметрами не найден");
+                Console.ForegroundColor = ConsoleColor.White;
+                Thread.Sleep(2000);
+            }
+        }
+
         public void ChangeReaderPassword()
         {
             int k = 1;
@@ -309,7 +373,7 @@ namespace Library.Cons.Model
                         continue;
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("msg");
+                    Console.WriteLine(msg);
                     Console.ForegroundColor = ConsoleColor.White;
                     Thread.Sleep(2000);
                 }
