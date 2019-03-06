@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Library.Cons.Model
@@ -16,7 +17,7 @@ namespace Library.Cons.Model
         private ServiceBookType serviceBookType = new ServiceBookType();
         private ServiceTransaction serviceTransaction = new ServiceTransaction();
 
-        public void MainMenu()
+        public void MainMenu() //+
         {
             while (true)
             {
@@ -26,19 +27,25 @@ namespace Library.Cons.Model
                 Console.WriteLine("2. Вход");
                 Console.WriteLine("3. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 1)
-                    RegisterMenu();
-                else if (ch == 2)
-                    LogOnMenu();
-                else if (ch == 3)
-                    break;
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
+                {
+                    if (choice[0] == '1')
+                        RegisterMenu();
+                    else if (choice[0] == '2')
+                        LogOnMenu();
+                    else if (choice[0] == '3')
+                        break;
+                    else                    
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");                        
+                }
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");                    
+                Thread.Sleep(1000);
             }
         }
 
-        public void RegisterMenu()
+        public void RegisterMenu() //+
         {
             while (true)
             {
@@ -49,19 +56,25 @@ namespace Library.Cons.Model
                 Console.WriteLine("2. Администратор");
                 Console.WriteLine("3. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 1)
-                    RegisterReaderMenu();
-                else if (ch == 2)
-                    RegisterAdministratorMenu();
-                else if (ch == 3)
-                    break;
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
+                {
+                    if (choice[0] == '1')
+                        RegisterReaderMenu();
+                    else if (choice[0] == '2')
+                        RegisterAdministratorMenu();
+                    else if (choice[0] == '3')
+                        break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                }
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);               
             }
         }
 
-        public void LogOnMenu()
+        public void LogOnMenu() //+
         {
             while (true)
             {
@@ -72,19 +85,25 @@ namespace Library.Cons.Model
                 Console.WriteLine("2. Администратор");
                 Console.WriteLine("3. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 1)
-                    LogOnReaderMenu();
-                else if (ch == 2)
-                    LogOnAdministratorMenu();
-                else if (ch == 3)
-                    break;
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
+                {
+                    if (choice[0] == '1')
+                        LogOnReaderMenu();
+                    else if (choice[0] == '2')
+                        LogOnAdministratorMenu();
+                    else if (choice[0] == '3')
+                        break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                }
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);
             }
         }
 
-        public void ReaderMenu()
+        public void ReaderMenu() //+
         {
             Book book = null;
             while (true)
@@ -97,23 +116,29 @@ namespace Library.Cons.Model
                 Console.WriteLine("3. Изменить пароль");
                 Console.WriteLine("4. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 1)
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
                 {
-                    FindBook(book);
-                    IssueBook(book);
+                    if (choice[0] == '1')
+                    {
+                        FindBook(book);
+                        IssueBook(book);
+                    }
+                    else if (choice[0] == '2')
+                        ReturnBook();
+                    else if (choice[0] == '3')
+                        ChangeReaderPassword();
+                    else if (choice[0] == '4')
+                        break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                 }
-                else if (ch == 2)
-                    ReturnBook();
-                else if (ch == 3)
-                    ChangeReaderPassword();
-                else if (ch == 4)
-                    break;
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);
             }
         }
-        public void AdministratorMenu()
+        public void AdministratorMenu() //+
         {            
             while (true)
             {
@@ -126,19 +151,25 @@ namespace Library.Cons.Model
                 Console.WriteLine("4. Изменить пароль");
                 Console.WriteLine("5. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 1)
-                    CreateOrChangeReader();
-                else if (ch == 2)
-                    CreateOrChangeBook();
-                else if (ch == 3)
-                    ReportsMenu();
-                else if (ch == 4)
-                    ChangeAdministratorPassword();
-                else if (ch == 4)
-                    break;
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
+                {
+                    if (choice[0] == '1')
+                        CreateOrChangeReader();
+                    else if (choice[0] == '2')
+                        CreateOrChangeBook();
+                    else if (choice[0] == '3')
+                        ReportsMenu();
+                    else if (choice[0] == '4')
+                        ChangeAdministratorPassword();
+                    else if (choice[0] == '5')
+                        break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                }
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Library.Cons.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,19 +31,23 @@ namespace Library.Cons
             //else
             //    Console.WriteLine("not");
 
-            Console.Write("День: ");
-            string day = Console.ReadLine();
-            Console.Write("Месяц: ");
-            string month = Console.ReadLine();
-            Console.Write("Год: ");
-            string year = Console.ReadLine();
-            string date = day + "." + month + "." + year;
-            DateTime ddate;
-            if (DateTime.TryParse(date, out ddate))
-                Console.WriteLine(ddate.ToShortDateString());
-            else
-                Console.WriteLine("not date");
+            //Console.Write("День: ");
+            //string day = Console.ReadLine();
+            //Console.Write("Месяц: ");
+            //string month = Console.ReadLine();
+            //Console.Write("Год: ");
+            //string year = Console.ReadLine();
+            //string date = day + "." + month + "." + year;
+            //DateTime ddate;
+            //if (DateTime.TryParse(date, out ddate))
+            //    Console.WriteLine(ddate.ToShortDateString());
+            //else
+            //    Console.WriteLine("not date");
 
+            ServiceMenu sm = new ServiceMenu();
+            Book b = null;
+            Reader r = new Reader();
+            sm.DebtorsListReport();
 
         }
     }

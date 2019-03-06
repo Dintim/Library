@@ -9,11 +9,11 @@ namespace Library.Cons.Model
 {
     public partial class ServiceMenu
     {
-        public void FindBook(Book book)
+        public void FindBook(Book book) //+
         {
+            string msg = "";
             while (true)
             {
-                string msg = "";                
                 Console.Clear();
                 Console.WriteLine("Поиск книги");
                 Console.WriteLine("---------------------------------------------\n");
@@ -22,80 +22,101 @@ namespace Library.Cons.Model
                 Console.WriteLine("3. По названию и автору");
                 Console.WriteLine("4. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 4)
-                    break;
-                else if (ch == 1)
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
                 {
-                    Console.WriteLine("---------------------------------------------\n");
-                    Console.Write("Введите ID: ");
-                    int id = Int32.Parse(Console.ReadLine());
-                    book = serviceBook.FindBookById(id, out msg);
-                    break;
-                }
-                else if (ch == 2)
-                {
-                    Console.WriteLine("---------------------------------------------\n");
-                    Console.Write("Введите ISDN: ");
-                    string isdn = Console.ReadLine();
-                    book = serviceBook.FindBookByISDN(isdn, out msg);
-                    break;
-                }
-                else if (ch == 3)
-                {
-                    Console.WriteLine("---------------------------------------------\n");
-                    Console.Write("Введите название: ");
-                    string name = Console.ReadLine();
-                    Console.Write("Введите автора: ");
-                    string author = Console.ReadLine();
-                    book = serviceBook.FindBookByNameAuthor(name, author, out msg);
-                    break;
+                    if (choice[0] == '1')
+                    {
+                        Console.WriteLine("---------------------------------------------\n");
+                        Console.Write("Введите ID: ");
+                        int id = Int32.Parse(Console.ReadLine());
+                        book = serviceBook.FindBookById(id, out msg);
+                        break;
+                    }
+                    else if (choice[0] == '2')
+                    {
+                        Console.WriteLine("---------------------------------------------\n");
+                        Console.Write("Введите ISDN: ");
+                        string isdn = Console.ReadLine();
+                        book = serviceBook.FindBookByISDN(isdn, out msg);
+                        break;
+                    }
+                    else if (choice[0] == '3')
+                    {
+                        Console.WriteLine("---------------------------------------------\n");
+                        Console.Write("Введите название: ");
+                        string name = Console.ReadLine();
+                        Console.Write("Введите автора: ");
+                        string author = Console.ReadLine();
+                        book = serviceBook.FindBookByNameAuthor(name, author, out msg);
+                        break;
+                    }
+                    else if (choice[0] == '4')
+                        break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                 }
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);
             }
         }
         
-        public void IssueBook(Book book)
+        public void IssueBook(Book book) //+
         {
             string msg = "";
             if (book!=null)
             {
-                Console.Clear();
-                Console.WriteLine("Найдено");
-                Console.WriteLine("---------------------------------------------\n");
-                Console.WriteLine(book.ToString());
-                Console.WriteLine("Заказать книгу?");
-                Console.WriteLine("1. да");
-                Console.WriteLine("2. нет");
-                Console.Write("Ваш ответ: ");
-                int ans = Int32.Parse(Console.ReadLine());
-                if (ans == 1)
-                {                    
-                    if (book.BookStatus != BookStatus.busy)
+                while (true)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Найдено");
+                    Console.WriteLine("---------------------------------------------\n");
+                    Console.WriteLine(book.ToString());
+                    Console.WriteLine("Заказать книгу?");
+                    Console.WriteLine("1. да");
+                    Console.WriteLine("2. нет");
+                    Console.Write("Ваш ответ: ");
+                    string choice = Console.ReadLine();
+                    if (Char.IsNumber(choice[0]) && choice.Length == 1)
                     {
-                        AuthorReader.IssuedBooks.Add(book);
-                        serviceBook.UpdateBookStatus(book, BookStatus.busy, out msg);
-                        Transaction trans = new Transaction();
-                        trans.Date = DateTime.Now;
-                        trans.Reader = AuthorReader;
-                        trans.Book = book;
-                        trans.TransactionType = TransactionType.issueBook;
-                        serviceTransaction.AddTransactionToDB(trans, out msg);
-                        Console.Clear();
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine("Книга добавлена в ваш лист");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Thread.Sleep(2000);
+                        if (choice[0] == '1')
+                        {
+                            if (book.BookStatus != BookStatus.busy)
+                            {
+                                AuthorReader.IssuedBooks.Add(book);
+                                serviceBook.UpdateBookStatus(book, BookStatus.busy, out msg);
+                                Transaction trans = new Transaction();
+                                trans.Date = DateTime.Now;
+                                trans.Reader = AuthorReader;
+                                trans.Book = book;
+                                trans.TransactionType = TransactionType.issueBook;
+                                serviceTransaction.AddTransactionToDB(trans, out msg);
+                                Console.Clear();
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("Книга добавлена в ваш лист");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Thread.Sleep(1000);
+                                break;
+                            }
+                            else
+                            {
+                                Console.Clear();
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("Книга сейчас занята. Пожалуста, выберите другую книгу");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Thread.Sleep(1000);
+                                break;
+                            }
+                        }
+                        else if (choice[0] == '2')
+                            break;
+                        else
+                            Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                     }
                     else
-                    {
-                        Console.Clear();
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Книга сейчас занята. Пожалуста, выберите другую книгу");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Thread.Sleep(2000);
-                    }
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                    Thread.Sleep(1000);
                 }
             }
             else
@@ -107,7 +128,7 @@ namespace Library.Cons.Model
             }
         }
 
-        public void ReturnBook()
+        public void ReturnBook() //+
         {
             string msg = "";
             Book book = null;
@@ -159,7 +180,7 @@ namespace Library.Cons.Model
             }
         }
 
-        public void UpdateBook(Book book)
+        public void UpdateBook(Book book) //+
         {
             string msg = "";
             if (book != null)
@@ -173,57 +194,60 @@ namespace Library.Cons.Model
                     Console.WriteLine("2. Жанр");
                     Console.WriteLine("3. Выход");
                     Console.Write("Ваш выбор: ");
-                    int ch = Int32.Parse(Console.ReadLine());
+                    string choice = Console.ReadLine();
                     Console.Clear();
-                    if (ch == 1)
+                    if (Char.IsNumber(choice[0]) && choice.Length == 1)
                     {
-                        Console.Write("Новый внутренний код книги:");
-                        string code = Console.ReadLine();
-                        serviceBook.UpdateBookCode(book, code, out msg);
-                    }
-                    else if (ch == 2)
-                    {
-                        Console.WriteLine("Новый жанр книги:");
-                        var tmp = serviceBookType.GetBookTypes(out msg);
-                        foreach (BookType i in tmp)
+                        if (choice[0] == '1')
                         {
-                            Console.WriteLine("{0}. {1}", i.Id, i.Name);
+                            Console.Write("Новый внутренний код книги:");
+                            string code = Console.ReadLine();
+                            serviceBook.UpdateBookCode(book, code, out msg);
                         }
-                        while (true)
+                        else if (choice[0] == '2')
                         {
-                            Console.Write("Ваш выбор жанра:");
-                            int btype = Int32.Parse(Console.ReadLine());
-                            if (tmp.Exists(e => e.Id.Equals(btype)))
+                            Console.WriteLine("Новый жанр книги:");
+                            var tmp = serviceBookType.GetBookTypes(out msg);
+                            foreach (BookType i in tmp)
                             {
-                                BookType bt = tmp.Find(f => f.Id.Equals(btype));
-                                serviceBook.UpdateBookBookType(book, bt, out msg);
-                                break;
+                                Console.WriteLine("{0}. {1}", i.Id, i.Name);
                             }
-                            else
-                                continue;
+                            while (true)
+                            {
+                                Console.Write("Ваш выбор жанра:");
+                                int btype = Int32.Parse(Console.ReadLine());
+                                if (tmp.Exists(e => e.Id.Equals(btype)))
+                                {
+                                    BookType bt = tmp.Find(f => f.Id.Equals(btype));
+                                    serviceBook.UpdateBookBookType(book, bt, out msg);
+                                    break;
+                                }                                
+                            }
                         }
-                    }                    
-                    else if (ch == 3)
-                        break;
+                        else if (choice[0] == '3')
+                            break;
+                        else
+                            Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                    }
                     else
-                        continue;
-
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(msg);
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Thread.Sleep(2000);
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                    Thread.Sleep(1000);
                 }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(msg);
+                Console.ForegroundColor = ConsoleColor.White;
+                Thread.Sleep(2000);
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Читатель с такими параметрами не найден");
+                Console.WriteLine("Книга с такими параметрами не найдена");
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(2000);
             }
         }
 
-        public void ChangeReaderPassword()
+        public void ChangeReaderPassword() //+
         {
             int k = 1;
             while (k != 4)
@@ -257,7 +281,7 @@ namespace Library.Cons.Model
             }
         }
 
-        public void FindReader(Reader reader)
+        public void FindReader(Reader reader) //+
         {
             while (true)
             {
@@ -269,33 +293,39 @@ namespace Library.Cons.Model
                 Console.WriteLine("2. По имени и фамилии");
                 Console.WriteLine("3. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 3)
-                    break;
-                else if (ch == 1)
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
                 {
-                    Console.WriteLine("---------------------------------------------\n");
-                    Console.Write("Введите ID: ");
-                    int id = Int32.Parse(Console.ReadLine());
-                    reader = serviceReader.FindReaderById(id, out msg);
-                    break;
+                    if (choice[0] == '1')
+                    {
+                        Console.WriteLine("---------------------------------------------\n");
+                        Console.Write("Введите ID: ");
+                        int id = Int32.Parse(Console.ReadLine());
+                        reader = serviceReader.FindReaderById(id, out msg);
+                        break;
+                    }
+                    else if (choice[0] == '2')
+                    {
+                        Console.WriteLine("---------------------------------------------\n");
+                        Console.Write("Введите имя: ");
+                        string name = Console.ReadLine();
+                        Console.Write("Введите фамилию: ");
+                        string surname = Console.ReadLine();
+                        reader = serviceReader.FindReaderByNameSurname(name, surname, out msg);
+                        break;
+                    }
+                    else if (choice[0] == '3')
+                        break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                 }
-                else if (ch == 2)
-                {
-                    Console.WriteLine("---------------------------------------------\n");
-                    Console.Write("Введите имя: ");
-                    string name = Console.ReadLine();
-                    Console.Write("Введите фамилию: ");
-                    string surname = Console.ReadLine();
-                    reader = serviceReader.FindReaderByNameSurname(name, surname, out msg);
-                    break;
-                }                
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);
             }
         }
 
-        public void UpdateReader(Reader reader)
+        public void UpdateReader(Reader reader) //+
         {
             string msg = "";
             if (reader != null)
@@ -314,68 +344,73 @@ namespace Library.Cons.Model
                     Console.WriteLine("7. Доступ");
                     Console.WriteLine("8. Выход");
                     Console.Write("Ваш выбор: ");
-                    int ch = Int32.Parse(Console.ReadLine());
+                    string choice = Console.ReadLine();
                     Console.Clear();
-                    if (ch == 1)
+                    if (Char.IsNumber(choice[0]) && choice.Length == 1)
                     {
-                        Console.Write("Новое имя читателя:");
-                        string name = Console.ReadLine();
-                        serviceReader.UpdateReaderName(reader, name, out msg);
-                    }
-                    else if (ch == 2)
-                    {
-                        Console.Write("Новая фамилия читателя:");
-                        string surname = Console.ReadLine();
-                        serviceReader.UpdateReaderSurname(reader, surname, out msg);
-                    }
-                    else if (ch == 3)
-                    {
-                        while (true)
+                        if (choice[0] == '1')
                         {
-                            Console.Write("Новый email читателя:");
-                            string tmp = Console.ReadLine();
-                            if ((!tmp.Contains("@") && (!tmp.Contains(".kz") || !tmp.Contains(".ru") || !tmp.Contains(".com") || !tmp.Contains(".org"))) || (!tmp.Contains("@") || tmp[0] == '@'))
-                                continue;
-                            else
+                            Console.Write("Новое имя читателя:");
+                            string name = Console.ReadLine();
+                            serviceReader.UpdateReaderName(reader, name, out msg);
+                        }
+                        else if (choice[0] == '2')
+                        {
+                            Console.Write("Новая фамилия читателя:");
+                            string surname = Console.ReadLine();
+                            serviceReader.UpdateReaderSurname(reader, surname, out msg);
+                        }
+                        else if (choice[0] == '3')
+                        {
+                            while (true)
                             {
-                                serviceReader.UpdateReaderEmail(reader, tmp, out msg);
-                                break;
+                                Console.Write("Новый email читателя:");
+                                string tmp = Console.ReadLine();
+                                if ((!tmp.Contains("@") && (!tmp.Contains(".kz") || !tmp.Contains(".ru") || !tmp.Contains(".com") || !tmp.Contains(".org"))) || (!tmp.Contains("@") || tmp[0] == '@'))
+                                    continue;
+                                else
+                                {
+                                    serviceReader.UpdateReaderEmail(reader, tmp, out msg);
+                                    break;
+                                }
                             }
                         }
+                        else if (choice[0] == '4')
+                        {
+                            Console.Write("Новый адрес читателя:");
+                            string address = Console.ReadLine();
+                            serviceReader.UpdateReaderAddress(reader, address, out msg);
+                        }
+                        else if (choice[0] == '5')
+                        {
+                            Console.Write("Новый телефон читателя:");
+                            string tel = Console.ReadLine();
+                            serviceReader.UpdateReaderTel(reader, tel, out msg);
+                        }
+                        else if (choice[0] == '6')
+                        {
+                            Console.Write("Новый пароль читателя:");
+                            string pass = Console.ReadLine();
+                            serviceReader.UpdateReaderPassword(reader, pass, out msg);
+                        }
+                        else if (choice[0] == '7')
+                        {
+                            Console.Write("Доступ читателя (0-свободный, 1-заблокировать):");
+                            bool status = Convert.ToBoolean(Int32.Parse(Console.ReadLine()));
+                            serviceReader.UpdateReaderStatus(reader, status, out msg);
+                        }
+                        else if (choice[0] == '8')
+                            break;
+                        else
+                            Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                     }
-                    else if (ch == 4)
-                    {
-                        Console.Write("Новый адрес читателя:");
-                        string address = Console.ReadLine();
-                        serviceReader.UpdateReaderAddress(reader, address, out msg);
-                    }
-                    else if (ch == 5)
-                    {
-                        Console.Write("Новый телефон читателя:");
-                        string tel = Console.ReadLine();
-                        serviceReader.UpdateReaderTel(reader, tel, out msg);
-                    }
-                    else if (ch == 6)
-                    {
-                        Console.Write("Новый пароль читателя:");
-                        string pass = Console.ReadLine();
-                        serviceReader.UpdateReaderPassword(reader, pass, out msg);
-                    }
-                    else if (ch == 7)
-                    {
-                        Console.Write("Доступ читателя (0-свободный, 1-заблокировать):");
-                        bool status = Convert.ToBoolean(Int32.Parse(Console.ReadLine()));
-                        serviceReader.UpdateReaderStatus(reader, status, out msg);
-                    }
-                    else if (ch == 8)
-                        break;
                     else
-                        continue;
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(msg);
                     Console.ForegroundColor = ConsoleColor.White;
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);                    
                 }
             }
             else

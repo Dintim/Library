@@ -12,9 +12,9 @@ namespace Library.Cons.Model
 {
     public partial class ServiceMenu
     {
-        public void CreateOrChangeReader()
+        public void CreateOrChangeReader() //+
         {
-            Reader reader = new Reader();            
+            Reader reader = null;            
             while (true)
             {
                 Console.Clear();
@@ -24,24 +24,30 @@ namespace Library.Cons.Model
                 Console.WriteLine("2. Редактировать профиль читателя");
                 Console.WriteLine("3. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 1)
-                    RegisterReaderMenu();
-                else if (ch == 2)
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
                 {
-                    FindReader(reader);
-                    UpdateReader(reader);
+                    if (choice[0] == '1')
+                        RegisterReaderMenu();
+                    else if (choice[0] == '2')
+                    {
+                        FindReader(reader);
+                        UpdateReader(reader);
+                    }
+                    else if (choice[0] == '3')
+                        break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                 }
-                else if (ch == 3)
-                    break;
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);
             }
         }
 
-        public void CreateOrChangeBook()
+        public void CreateOrChangeBook() //+
         {
-            Book book = new Book();
+            Book book = null;
             while (true)
             {
                 Console.Clear();
@@ -52,32 +58,37 @@ namespace Library.Cons.Model
                 Console.WriteLine("3. Добавить новый жанр");
                 Console.WriteLine("4. Выход");
                 Console.Write("Ваш выбор: ");
-                int ch = Int32.Parse(Console.ReadLine());
-                if (ch == 1)
-                    RegisterBookMenu();
-                else if (ch == 2)
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
                 {
-                    FindBook(book);
-                    UpdateBook(book);
+                    if (choice[0] == '1')
+                        RegisterBookMenu();
+                    else if (choice[0] == '2')
+                    {
+                        FindBook(book);
+                        UpdateBook(book);
+                    }
+                    else if (choice[0] == '3')
+                        AddNewBookType();
+                    else if (choice[0] == '4')
+                        break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                 }
-                else if (ch == 3)                    
-                    AddNewBookType();
-                else if (ch == 4)
-                    break;
                 else
-                    continue;
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);
             }
         }
 
-        public void ReportsMenu()
-        {
-            string msg = "";
+        public void ReportsMenu() //+
+        {            
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine("Отчеты");
                 Console.WriteLine("---------------------------------------------\n");
-                Console.WriteLine("1. Ежедневный отчет");
+                Console.WriteLine("1. Отчет за указанный день");
                 Console.WriteLine("2. Список должников");
                 Console.WriteLine("3. Список занятых книг");
                 Console.WriteLine("4. Выход");
@@ -89,32 +100,74 @@ namespace Library.Cons.Model
                         DailyReport();
                     else if (ch[0] == '2')
                         DebtorsListReport();
-                    //else if (ch[0] == '3')
-                    //    IssuedBooksReport();
+                    else if (ch[0] == '3')
+                        IssuedBooksReport();
                     else if (ch[0] == '4')
                         break;
+                    else
+                        Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                 }
                 else
-                {
-                    Console.WriteLine("Некорректный ввод. Введите еще раз");
-                }
+                    Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
+                Thread.Sleep(1000);
             }
         }
 
-        public void DebtorsListReport()
+        public void IssuedBooksReport() //+
+        {
+            string msg = "";            
+            Console.Clear();
+            var bList = serviceBook.GetBooks(out msg).Where(w => w.BookStatus.Equals(BookStatus.busy));            
+            if (!serviceBook.GetBooks(out msg).Exists(w => w.BookStatus.Equals(BookStatus.busy)))
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Все книги свободны");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.WriteLine("Список занятых книг на текущую дату");
+                Console.WriteLine("ID\tISDN\tКод\tНазвание\tАвтор\tГод издания\tСтатус");
+                Console.WriteLine("---------------------------------------------\n");
+                foreach (Book i in bList)
+                {
+                    Console.WriteLine("{0}\t{0}\t{0}\t{0}\t{0}\t{0}\t{0}", i.Id, i.ISDN, i.Code, i.Name, i.Author, i.PublishDate, i.BookStatus);
+                }
+                Console.Write("Сохранить в XML формате? (0-нет, 1-да): ");
+                string choice = Console.ReadLine();
+                if (Char.IsNumber(choice[0]) && choice.Length == 1)
+                {
+                    if (choice[0] == '1')
+                        CreateBooksXML("IssuedBooksReport", bList.ToList(), DateTime.Now);
+                }
+            }
+            Thread.Sleep(2000);
+        }
+
+        public void CreateBooksXML(string name, List<Book> bList, DateTime ddate) //+
+        {
+            string path = name + ddate.Year + ddate.Month + ddate.Day + ".xml";
+            SoapFormatter formatter = new SoapFormatter();
+            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            {
+                formatter.Serialize(fs, bList.ToArray());
+            }
+        }
+
+        public void DebtorsListReport() //+
         {
             string msg = "";
             List<TransactionShort> tsList = new List<TransactionShort>();
             Console.Clear();
             var tList = serviceTransaction.GetIssueTransactions(out msg);
             var bList = serviceBook.GetBooks(out msg).Where(w => w.BookStatus.Equals(BookStatus.busy));
-            if (bList == null)
+            if (!serviceBook.GetBooks(out msg).Exists(w => w.BookStatus.Equals(BookStatus.busy)))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Все книги свободны, должников нет");
                 Console.ForegroundColor = ConsoleColor.White;                                
             }
-            if (tList != null && bList != null)
+            if (tList != null && serviceBook.GetBooks(out msg).Exists(w => w.BookStatus.Equals(BookStatus.busy)))
             {
                 foreach (Transaction i in tList)
                 {
@@ -143,13 +196,13 @@ namespace Library.Cons.Model
                 if (Char.IsNumber(choice[0]) && choice.Length == 1)
                 {
                     if (choice[0] == '1')
-                        CreateXMLDailyReport("DebtorsReport", tsList, DateTime.Now);
+                        CreateTransactionsXML("DebtorsReport", tsList, DateTime.Now);
                 }
             }
             Thread.Sleep(2000);
         }
 
-        public void DailyReport()
+        public void DailyReport() //+
         {
             string msg = "";
             List<TransactionShort> tsList = new List<TransactionShort>();
@@ -172,7 +225,7 @@ namespace Library.Cons.Model
                     Console.WriteLine("Отчет на {0: dd.MM.yyyy}", ddate);
                     Console.WriteLine("ID\tДата\tID читателя\tЧитатель\tID книги\tКнига\tТип операции");
                     Console.WriteLine("---------------------------------------------\n");
-                    var tmp = serviceTransaction.GetTransactions(out msg);
+                    var tmp = serviceTransaction.GetTransactions(out msg).Where(w => w.Date.Equals(ddate));
                     foreach (Transaction i in tmp)
                     {
                         TransactionShort ts = new TransactionShort();
@@ -192,7 +245,7 @@ namespace Library.Cons.Model
                     if (Char.IsNumber(choice[0]) && choice.Length == 1)
                     {
                         if (choice[0] == '1')
-                            CreateXMLDailyReport("DailyReport", tsList, ddate);
+                            CreateTransactionsXML("DailyReport", tsList, ddate);
                     }
                     Thread.Sleep(2000);
                     break;
@@ -204,7 +257,7 @@ namespace Library.Cons.Model
             }            
         }
 
-        public void CreateXMLDailyReport(string name, List<TransactionShort> tsList, DateTime ddate)
+        public void CreateTransactionsXML(string name, List<TransactionShort> tsList, DateTime ddate) //+
         {
             string path = name + ddate.Year + ddate.Month + ddate.Day + ".xml";
             SoapFormatter formatter = new SoapFormatter();
@@ -214,7 +267,7 @@ namespace Library.Cons.Model
             }
         }
 
-        public void ChangeAdministratorPassword()
+        public void ChangeAdministratorPassword() //+
         {            
             int k = 1;
             while (k != 4)
@@ -248,7 +301,7 @@ namespace Library.Cons.Model
             }
         }
 
-        public void RegisterBookMenu()
+        public void RegisterBookMenu() //+
         {
             string msg = "";
             Book book = new Book();
@@ -319,7 +372,7 @@ namespace Library.Cons.Model
             Thread.Sleep(1000);
         }
 
-        public void AddNewBookType()
+        public void AddNewBookType() //+
         {
             string msg = "";
             Console.Clear();

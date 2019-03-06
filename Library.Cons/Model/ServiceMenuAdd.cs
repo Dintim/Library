@@ -9,7 +9,7 @@ namespace Library.Cons.Model
 {
     public partial class ServiceMenu
     {
-        public void RegisterReaderMenu()
+        public void RegisterReaderMenu() //+
         {
             string msg = "";
             Reader reader = new Reader();
@@ -58,7 +58,7 @@ namespace Library.Cons.Model
             Thread.Sleep(1000);
         }
 
-        public void RegisterAdministratorMenu()
+        public void RegisterAdministratorMenu() //+
         {
             string msg = "";
             Administrator admin = new Administrator();
@@ -107,7 +107,7 @@ namespace Library.Cons.Model
             Thread.Sleep(1000);
         }
 
-        public void LogOnReaderMenu()
+        public void LogOnReaderMenu() //+
         {
             int k = 1;
             while (k!=4)
@@ -157,7 +157,7 @@ namespace Library.Cons.Model
             }
         }
 
-        public void LogOnAdministratorMenu()
+        public void LogOnAdministratorMenu() //+
         {
             int k = 1;
             while (k!=4)
