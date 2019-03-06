@@ -16,6 +16,7 @@ namespace Library.Cons.Model
         private ServiceBook serviceBook = new ServiceBook();
         private ServiceBookType serviceBookType = new ServiceBookType();
         private ServiceTransaction serviceTransaction = new ServiceTransaction();
+        
 
         public void MainMenu() //+
         {
@@ -121,7 +122,7 @@ namespace Library.Cons.Model
                 {
                     if (choice[0] == '1')
                     {
-                        FindBook(book);
+                        FindBook(out book);
                         IssueBook(book);
                     }
                     else if (choice[0] == '2')

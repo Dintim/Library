@@ -47,8 +47,14 @@ namespace Library.Cons
             ServiceMenu sm = new ServiceMenu();
             Book b = null;
             Reader r = new Reader();
-            sm.DebtorsListReport();
-
+            sm.MainMenu();
+            //string msg = "";
+            //var tmp = sm.serviceBook.FindBookById(1, out msg);
+            //if (tmp!=null)
+            //    Console.WriteLine(tmp.ToString());
+            //else
+            //    Console.WriteLine("no");
+            
         }
     }
 }

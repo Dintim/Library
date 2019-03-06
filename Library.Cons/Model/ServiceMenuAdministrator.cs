@@ -31,7 +31,7 @@ namespace Library.Cons.Model
                         RegisterReaderMenu();
                     else if (choice[0] == '2')
                     {
-                        FindReader(reader);
+                        FindReader(out reader);
                         UpdateReader(reader);
                     }
                     else if (choice[0] == '3')
@@ -65,7 +65,7 @@ namespace Library.Cons.Model
                         RegisterBookMenu();
                     else if (choice[0] == '2')
                     {
-                        FindBook(book);
+                        FindBook(out book);
                         UpdateBook(book);
                     }
                     else if (choice[0] == '3')

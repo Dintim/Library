@@ -9,7 +9,7 @@ namespace Library.Cons.Model
 {
     public partial class ServiceMenu
     {
-        public void FindBook(Book book) //+
+        public void FindBook(out Book book) //+
         {
             string msg = "";
             while (true)
@@ -52,7 +52,10 @@ namespace Library.Cons.Model
                         break;
                     }
                     else if (choice[0] == '4')
+                    {
+                        book = null;
                         break;
+                    }
                     else
                         Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                 }
@@ -96,7 +99,7 @@ namespace Library.Cons.Model
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine("Книга добавлена в ваш лист");
                                 Console.ForegroundColor = ConsoleColor.White;
-                                Thread.Sleep(1000);
+                                Thread.Sleep(1000);                                
                                 break;
                             }
                             else
@@ -105,7 +108,7 @@ namespace Library.Cons.Model
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine("Книга сейчас занята. Пожалуста, выберите другую книгу");
                                 Console.ForegroundColor = ConsoleColor.White;
-                                Thread.Sleep(1000);
+                                Thread.Sleep(1000);                                
                                 break;
                             }
                         }
@@ -188,7 +191,7 @@ namespace Library.Cons.Model
                 while (true)
                 {
                     Console.Clear();
-                    Console.WriteLine("Редактировать профиль книги");
+                    Console.WriteLine("Редактировать профиль книги {0}, авт. {1}", book.Name, book.Author);
                     Console.WriteLine("---------------------------------------------\n");                    
                     Console.WriteLine("1. Внутренний код");
                     Console.WriteLine("2. Жанр");
@@ -200,12 +203,14 @@ namespace Library.Cons.Model
                     {
                         if (choice[0] == '1')
                         {
+                            Console.WriteLine("Внутренний код: {0}", book.Code);
                             Console.Write("Новый внутренний код книги:");
                             string code = Console.ReadLine();
                             serviceBook.UpdateBookCode(book, code, out msg);
                         }
                         else if (choice[0] == '2')
                         {
+                            Console.WriteLine("Жанр: {0}", book.BookType);
                             Console.WriteLine("Новый жанр книги:");
                             var tmp = serviceBookType.GetBookTypes(out msg);
                             foreach (BookType i in tmp)
@@ -281,7 +286,7 @@ namespace Library.Cons.Model
             }
         }
 
-        public void FindReader(Reader reader) //+
+        public void FindReader(out Reader reader) //+
         {
             while (true)
             {
@@ -315,7 +320,10 @@ namespace Library.Cons.Model
                         break;
                     }
                     else if (choice[0] == '3')
+                    {
+                        reader = null;
                         break;
+                    }
                     else
                         Console.WriteLine("Некорректный ввод. Попробуйте еще раз");
                 }
@@ -333,7 +341,7 @@ namespace Library.Cons.Model
                 while (true)
                 {
                     Console.Clear();
-                    Console.WriteLine("Редактировать профиль читателя");
+                    Console.WriteLine("Редактировать профиль читателя {0} {1}", reader.Name, reader.Surname);
                     Console.WriteLine("---------------------------------------------\n");
                     Console.WriteLine("1. Имя");
                     Console.WriteLine("2. Фамилия");
@@ -350,12 +358,14 @@ namespace Library.Cons.Model
                     {
                         if (choice[0] == '1')
                         {
+                            Console.WriteLine("Имя: {0}", reader.Name);
                             Console.Write("Новое имя читателя:");
                             string name = Console.ReadLine();
                             serviceReader.UpdateReaderName(reader, name, out msg);
                         }
                         else if (choice[0] == '2')
                         {
+                            Console.WriteLine("Фамилия: {0}", reader.Surname);
                             Console.Write("Новая фамилия читателя:");
                             string surname = Console.ReadLine();
                             serviceReader.UpdateReaderSurname(reader, surname, out msg);
@@ -364,6 +374,7 @@ namespace Library.Cons.Model
                         {
                             while (true)
                             {
+                                Console.WriteLine("Email: {0}", reader.Email);
                                 Console.Write("Новый email читателя:");
                                 string tmp = Console.ReadLine();
                                 if ((!tmp.Contains("@") && (!tmp.Contains(".kz") || !tmp.Contains(".ru") || !tmp.Contains(".com") || !tmp.Contains(".org"))) || (!tmp.Contains("@") || tmp[0] == '@'))
@@ -377,24 +388,28 @@ namespace Library.Cons.Model
                         }
                         else if (choice[0] == '4')
                         {
+                            Console.WriteLine("Адрес: {0}", reader.Address);
                             Console.Write("Новый адрес читателя:");
                             string address = Console.ReadLine();
                             serviceReader.UpdateReaderAddress(reader, address, out msg);
                         }
                         else if (choice[0] == '5')
                         {
+                            Console.WriteLine("Телефон: {0}", reader.Tel);
                             Console.Write("Новый телефон читателя:");
                             string tel = Console.ReadLine();
                             serviceReader.UpdateReaderTel(reader, tel, out msg);
                         }
                         else if (choice[0] == '6')
                         {
+                            Console.WriteLine("Пароль: {0}", reader.Password);
                             Console.Write("Новый пароль читателя:");
                             string pass = Console.ReadLine();
                             serviceReader.UpdateReaderPassword(reader, pass, out msg);
                         }
                         else if (choice[0] == '7')
                         {
+                            Console.WriteLine("Заблокирован: {0}", reader.IsBlocked);
                             Console.Write("Доступ читателя (0-свободный, 1-заблокировать):");
                             bool status = Convert.ToBoolean(Int32.Parse(Console.ReadLine()));
                             serviceReader.UpdateReaderStatus(reader, status, out msg);

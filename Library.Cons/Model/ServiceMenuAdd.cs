@@ -12,6 +12,7 @@ namespace Library.Cons.Model
         public void RegisterReaderMenu() //+
         {
             string msg = "";
+            Console.Clear();
             Reader reader = new Reader();
             Console.WriteLine("Форма регистрации для читателя:");
             Console.WriteLine("---------------------------------------------\n");
@@ -61,6 +62,7 @@ namespace Library.Cons.Model
         public void RegisterAdministratorMenu() //+
         {
             string msg = "";
+            Console.Clear();
             Administrator admin = new Administrator();
             Console.WriteLine("Форма регистрации для администратора:");
             Console.WriteLine("---------------------------------------------\n");
@@ -120,15 +122,27 @@ namespace Library.Cons.Model
                 string login = Console.ReadLine();
                 Console.Write("Пароль: ");
                 string password = Console.ReadLine();
+
                 Reader reader = serviceReader.LogOnReader(login, password, out msg);
-                if (reader!=null && reader.IsBlocked==false)
+                if (reader!=null)
                 {
-                    AuthorReader = reader;
-                    List<Transaction> tmp = serviceTransaction.GetTransactionsByReaderId(AuthorReader.Id, out msg);
-                    foreach (Transaction i in tmp.Where(w=>w.Book.BookStatus.Equals(BookStatus.busy)))
-                    {                        
-                        AuthorReader.IssuedBooks.Add(i.Book);
+                    if (reader.IsBlocked)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Ваш профиль заблокирован. Обратитесь к администрации");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Thread.Sleep(2000);
+                        break;
                     }
+                    AuthorReader = reader;
+                    //List<Transaction> tmp = serviceTransaction.GetTransactionsByReaderId(AuthorReader.Id, out msg).Where(w => w.Book.BookStatus.Equals(BookStatus.busy)).ToList();
+                    //if (tmp != null)
+                    //{
+                    //    foreach (Transaction i in tmp.Where(w => w.Book.BookStatus.Equals(BookStatus.busy)))
+                    //    {
+                    //        AuthorReader.IssuedBooks.Add(i.Book);
+                    //    }
+                    //}
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(msg);
@@ -136,15 +150,7 @@ namespace Library.Cons.Model
                     Thread.Sleep(1000);                    
                     ReaderMenu();
                     break;
-                }
-                else if (reader != null && reader.IsBlocked == true)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Ваш профиль заблокирован. Обратитесь к администрации");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Thread.Sleep(2000);
-                    break;
-                }
+                }                
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
