@@ -51,6 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceAdministrator.cs" />
     <Compile Include="ServiceBook.cs" />
+    <Compile Include="ServiceBookType.cs" />
     <Compile Include="ServiceReader.cs" />
     <Compile Include="ServiceTransaction.cs" />
     <Compile Include="Transaction.cs" />

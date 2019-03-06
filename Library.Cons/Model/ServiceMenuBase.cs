@@ -85,6 +85,7 @@ namespace Library.Cons.Model
 
         public void ReaderMenu()
         {
+            Book book = null;
             while (true)
             {
                 Console.Clear();
@@ -97,7 +98,10 @@ namespace Library.Cons.Model
                 Console.Write("Ваш выбор: ");
                 int ch = Int32.Parse(Console.ReadLine());
                 if (ch == 1)
-                    FindBook();
+                {
+                    FindBook(book);
+                    IssueBook(book);
+                }
                 else if (ch == 2)
                     ReturnBook();
                 else if (ch == 3)
@@ -109,8 +113,32 @@ namespace Library.Cons.Model
             }
         }
         public void AdministratorMenu()
-        {
-
+        {            
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Меню администратора");
+                Console.WriteLine("---------------------------------------------\n");
+                Console.WriteLine("1. Читатели");
+                Console.WriteLine("2. Книжный фонд");
+                Console.WriteLine("3. Отчеты");
+                Console.WriteLine("4. Изменить пароль");
+                Console.WriteLine("5. Выход");
+                Console.Write("Ваш выбор: ");
+                int ch = Int32.Parse(Console.ReadLine());
+                if (ch == 1)
+                    CreateOrChangeReader();
+                else if (ch == 2)
+                    CreateOrChangeBook();
+                else if (ch == 3)
+                    ReportsMenu();
+                else if (ch == 4)
+                    ChangeAdministratorPassword();
+                else if (ch == 4)
+                    break;
+                else
+                    continue;
+            }
         }
     }
 }

@@ -124,6 +124,12 @@ namespace Library.Cons.Model
                 if (reader!=null)
                 {
                     AuthorReader = reader;
+                    List<Transaction> tmp = serviceTransaction.GetTransactionsByReaderId(AuthorReader.Id, out msg);
+                    foreach (Transaction i in tmp.Where(w=>w.Book.BookStatus.Equals(BookStatus.busy)))
+                    {                        
+                        AuthorReader.IssuedBooks.Add(i.Book);
+                    }
+
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine(msg);
                     Console.ForegroundColor = ConsoleColor.White;

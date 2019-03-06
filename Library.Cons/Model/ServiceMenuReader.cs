@@ -9,12 +9,11 @@ namespace Library.Cons.Model
 {
     public partial class ServiceMenu
     {
-        public void FindBook()
+        public void FindBook(Book book)
         {
             while (true)
             {
-                string msg = "";
-                Book book = null;
+                string msg = "";                
                 Console.Clear();
                 Console.WriteLine("Поиск книги");
                 Console.WriteLine("---------------------------------------------\n");
@@ -24,7 +23,7 @@ namespace Library.Cons.Model
                 Console.WriteLine("4. Выход");
                 Console.Write("Ваш выбор: ");
                 int ch = Int32.Parse(Console.ReadLine());
-                if (ch >= 4)
+                if (ch == 4)
                     break;
                 else if (ch == 1)
                 {
@@ -32,6 +31,7 @@ namespace Library.Cons.Model
                     Console.Write("Введите ID: ");
                     int id = Int32.Parse(Console.ReadLine());
                     book = serviceBook.FindBookById(id, out msg);
+                    break;
                 }
                 else if (ch == 2)
                 {
@@ -39,6 +39,7 @@ namespace Library.Cons.Model
                     Console.Write("Введите ISDN: ");
                     string isdn = Console.ReadLine();
                     book = serviceBook.FindBookByISDN(isdn, out msg);
+                    break;
                 }
                 else if (ch == 3)
                 {
@@ -48,56 +49,59 @@ namespace Library.Cons.Model
                     Console.Write("Введите автора: ");
                     string author = Console.ReadLine();
                     book = serviceBook.FindBookByNameAuthor(name, author, out msg);
-                }
-
-                if (book != null)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Найдено");
-                    Console.WriteLine("---------------------------------------------\n");
-                    Console.WriteLine(book.ToString());
-                    Console.WriteLine("Заказать книгу?");
-                    Console.WriteLine("1. да");
-                    Console.WriteLine("2. нет");
-                    Console.Write("Ваш ответ: ");
-                    int ans = Int32.Parse(Console.ReadLine());
-                    if (ans == 1)
-                        IssueBook(book);
+                    break;
                 }
                 else
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;                    
-                    Console.WriteLine(msg);
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Thread.Sleep(2000);
-                }
+                    continue;
             }
         }
         
         public void IssueBook(Book book)
         {
             string msg = "";
-            if (book.BookStatus!=BookStatus.busy)
+            if (book!=null)
             {
-                AuthorReader.IssuedBooks.Add(book);
-                serviceBook.UpdateBookStatus(book, BookStatus.busy, out msg);
-                Transaction trans = new Transaction();
-                trans.Date = DateTime.Now;
-                trans.Reader = AuthorReader;
-                trans.Book = book;
-                trans.TransactionType = TransactionType.issueBook;
-                serviceTransaction.AddTransactionToDB(trans, out msg);
                 Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Книга добавлена в ваш лист");
-                Console.ForegroundColor = ConsoleColor.White;
-                Thread.Sleep(2000);
+                Console.WriteLine("Найдено");
+                Console.WriteLine("---------------------------------------------\n");
+                Console.WriteLine(book.ToString());
+                Console.WriteLine("Заказать книгу?");
+                Console.WriteLine("1. да");
+                Console.WriteLine("2. нет");
+                Console.Write("Ваш ответ: ");
+                int ans = Int32.Parse(Console.ReadLine());
+                if (ans == 1)
+                {                    
+                    if (book.BookStatus != BookStatus.busy)
+                    {
+                        AuthorReader.IssuedBooks.Add(book);
+                        serviceBook.UpdateBookStatus(book, BookStatus.busy, out msg);
+                        Transaction trans = new Transaction();
+                        trans.Date = DateTime.Now;
+                        trans.Reader = AuthorReader;
+                        trans.Book = book;
+                        trans.TransactionType = TransactionType.issueBook;
+                        serviceTransaction.AddTransactionToDB(trans, out msg);
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("Книга добавлена в ваш лист");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Thread.Sleep(2000);
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Книга сейчас занята. Пожалуста, выберите другую книгу");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Thread.Sleep(2000);
+                    }
+                }
             }
             else
             {
-                Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Книга сейчас занята. Пожалуста, выберите другую книгу");
+                Console.WriteLine(msg);
                 Console.ForegroundColor = ConsoleColor.White;
                 Thread.Sleep(2000);
             }
