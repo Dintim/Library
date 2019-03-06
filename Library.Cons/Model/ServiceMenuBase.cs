@@ -12,6 +12,8 @@ namespace Library.Cons.Model
         private Reader AuthorReader = new Reader();
         private ServiceAdministrator serviceAdministrator = new ServiceAdministrator();
         private Administrator AuthorAdmin = new Administrator();
+        private ServiceBook serviceBook = new ServiceBook();
+        private ServiceTransaction serviceTransaction = new ServiceTransaction();
 
         public void MainMenu()
         {
@@ -89,21 +91,18 @@ namespace Library.Cons.Model
                 Console.WriteLine("Меню читателя");
                 Console.WriteLine("---------------------------------------------\n");
                 Console.WriteLine("1. Найти книгу");
-                Console.WriteLine("2. Взять книгу");
-                Console.WriteLine("3. Вернуть книгу");
-                Console.WriteLine("4. Изменить пароль");
-                Console.WriteLine("5. Выход");
+                Console.WriteLine("2. Вернуть книгу");
+                Console.WriteLine("3. Изменить пароль");
+                Console.WriteLine("4. Выход");
                 Console.Write("Ваш выбор: ");
                 int ch = Int32.Parse(Console.ReadLine());
                 if (ch == 1)
                     FindBook();
                 else if (ch == 2)
-                    IssueBook();
-                else if (ch == 3)
                     ReturnBook();
-                else if (ch == 4)
+                else if (ch == 3)
                     ChangeReaderPassword();
-                else if (ch == 5)
+                else if (ch == 4)
                     break;
                 else
                     continue;
