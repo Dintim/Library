@@ -9,6 +9,10 @@ namespace Library.Cons.Model
     public partial class ServiceMenu
     {
         private ServiceReader serviceReader = new ServiceReader();
+        private Reader AuthorReader = new Reader();
+        private ServiceAdministrator serviceAdministrator = new ServiceAdministrator();
+        private Administrator AuthorAdmin = new Administrator();
+
         public void MainMenu()
         {
             while (true)
@@ -44,9 +48,9 @@ namespace Library.Cons.Model
                 Console.Write("Ваш выбор: ");
                 int ch = Int32.Parse(Console.ReadLine());
                 if (ch == 1)
-                    ReaderRegisterMenu();
+                    RegisterReaderMenu();
                 else if (ch == 2)
-                    AdministratorRegisterMenu();
+                    RegisterAdministratorMenu();
                 else if (ch == 3)
                     break;
                 else
@@ -55,6 +59,57 @@ namespace Library.Cons.Model
         }
 
         public void LogOnMenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Меню входа в систему");
+                Console.WriteLine("---------------------------------------------\n");
+                Console.WriteLine("1. Читатель");
+                Console.WriteLine("2. Администратор");
+                Console.WriteLine("3. Выход");
+                Console.Write("Ваш выбор: ");
+                int ch = Int32.Parse(Console.ReadLine());
+                if (ch == 1)
+                    LogOnReaderMenu();
+                else if (ch == 2)
+                    LogOnAdministratorMenu();
+                else if (ch == 3)
+                    break;
+                else
+                    continue;
+            }
+        }
+
+        public void ReaderMenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("Меню читателя");
+                Console.WriteLine("---------------------------------------------\n");
+                Console.WriteLine("1. Найти книгу");
+                Console.WriteLine("2. Взять книгу");
+                Console.WriteLine("3. Вернуть книгу");
+                Console.WriteLine("4. Изменить пароль");
+                Console.WriteLine("5. Выход");
+                Console.Write("Ваш выбор: ");
+                int ch = Int32.Parse(Console.ReadLine());
+                if (ch == 1)
+                    FindBook();
+                else if (ch == 2)
+                    IssueBook();
+                else if (ch == 3)
+                    ReturnBook();
+                else if (ch == 4)
+                    ChangeReaderPassword();
+                else if (ch == 5)
+                    break;
+                else
+                    continue;
+            }
+        }
+        public void AdministratorMenu()
         {
 
         }

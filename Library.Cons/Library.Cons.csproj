@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Model\ServiceMenuAdd.cs" />
     <Compile Include="Model\ServiceMenuBase.cs" />
+    <Compile Include="Model\ServiceMenuReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

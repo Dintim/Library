@@ -58,7 +58,7 @@ namespace Library
                     var results = readers.Find(f => f.Login.Equals(login) && f.Password.Equals(password));
                     if (results.Any())
                     {
-                        message = "";
+                        message = "Вход успешно выполнен";
                         return results.FirstOrDefault();
                     }
                     else
