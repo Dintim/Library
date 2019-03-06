@@ -75,6 +75,26 @@ namespace Library
             }
         }
 
+        public bool UpdateAdministratorPassword(Administrator admin, string password, out string message)
+        {
+            try
+            {
+                using (LiteDatabase db = new LiteDatabase(@"library.db"))
+                {
+                    var adm = db.GetCollection<Administrator>("Administrators");
+                    admin.Password = password;
+                    adm.Update(admin);
+                }
+                message = string.Format("Пароль администратора {0} изменен", admin.Id);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return false;
+            }
+        }
+
         public List<Administrator> GetAdministrators(out string message)
         {
             List<Administrator> admins = null;

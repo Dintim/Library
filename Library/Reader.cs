@@ -18,6 +18,11 @@ namespace Library
         public string Tel { get; set; }
         public bool IsBlocked { get; set; }
 
+        public Reader()
+        {
+            IsBlocked = false;
+        }
+
         public List<Book> IssuedBooks = new List<Book>();
 
         public override string ToString()

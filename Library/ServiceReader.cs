@@ -211,6 +211,26 @@ namespace Library
             }
         }
 
+        public bool UpdateReaderName(Reader reader, string name, out string message)
+        {
+            try
+            {
+                using (LiteDatabase db = new LiteDatabase(@"library.db"))
+                {
+                    var readers = db.GetCollection<Reader>("Readers");
+                    reader.Name = name;
+                    readers.Update(reader);
+                }
+                message = string.Format("Имя читателя {0} изменено на {1}", reader.Id, name);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return false;
+            }
+        }
+
         public bool UpdateReaderSurname(Reader reader, string surname, out string message)
         {
             try
@@ -222,6 +242,26 @@ namespace Library
                     readers.Update(reader);
                 }
                 message = string.Format("Фамилия читателя {0} изменена на {1}", reader.Id, surname);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                return false;
+            }
+        }
+
+        public bool UpdateReaderStatus(Reader reader, bool status, out string message)
+        {
+            try
+            {
+                using (LiteDatabase db = new LiteDatabase(@"library.db"))
+                {
+                    var readers = db.GetCollection<Reader>("Readers");
+                    reader.IsBlocked = status;
+                    readers.Update(reader);
+                }
+                message = string.Format("Доступ читателя {0} изменен на {1}", reader.Id, status);
                 return true;
             }
             catch (Exception ex)

@@ -10,6 +10,9 @@ namespace Library.Cons
     {
         static void Main(string[] args)
         {
+            Console.Write(": ");
+            bool x = Convert.ToBoolean(Int32.Parse(Console.ReadLine()));
+            Console.WriteLine(x);
         }
     }
 }

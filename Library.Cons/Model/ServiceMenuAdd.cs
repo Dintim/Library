@@ -121,7 +121,7 @@ namespace Library.Cons.Model
                 Console.Write("Пароль: ");
                 string password = Console.ReadLine();
                 Reader reader = serviceReader.LogOnReader(login, password, out msg);
-                if (reader!=null)
+                if (reader!=null && reader.IsBlocked==false)
                 {
                     AuthorReader = reader;
                     List<Transaction> tmp = serviceTransaction.GetTransactionsByReaderId(AuthorReader.Id, out msg);
@@ -135,6 +135,14 @@ namespace Library.Cons.Model
                     Console.ForegroundColor = ConsoleColor.White;
                     Thread.Sleep(1000);                    
                     ReaderMenu();
+                    break;
+                }
+                else if (reader != null && reader.IsBlocked == true)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Ваш профиль заблокирован. Обратитесь к администрации");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Thread.Sleep(2000);
                     break;
                 }
                 else
